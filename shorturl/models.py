@@ -1,5 +1,4 @@
 
-from asyncio.windows_events import NULL
 from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
@@ -19,7 +18,7 @@ class ShortUrl(models.Model):
     original_url = models.URLField(max_length = 800)
     short_url = models.CharField(max_length = 50)
     time_date_created = models.DateTimeField()
-    profile = models.ForeignKey(Profile, on_delete= models.CASCADE, default=1)
+    profile = models.ForeignKey(Profile, related_name = 'profile' ,on_delete= models.CASCADE, default=1)
 
 
     def __str__(self) -> str:

@@ -3,9 +3,21 @@
 
 
 {% block content %}
-<h3>{{user.username}}</h3>
-<h3>your last login: {{user.last_login}}</h3>
-<p class="bg-dark">
+<h3 class="bg-primary2">user name: {{user.username}}</h3>
+<h3 class="bg-primary2">your last login: {{user.last_login}}</h3>
+
+
+
+{%if user_urls%}
+{%for url in user_urls%}
+<h3 class="bg-primary3">your url {{forloop.counter}}: {{url.short_url}}</h3>
+<h3 class="bg-primary3">date create: {{url.time_date_created|date:'D d M Y'}}</h3>
+{%endfor%}
+{%endif%}
+
+
+
+<p class="bg-dark lead">
 {{msg}}
 </p>
 {% endblock content %}

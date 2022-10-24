@@ -1,7 +1,7 @@
 import profile
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from .models import ShortUrl
+from .models import ShortUrl, Profile
 from .forms import CreateNewShortUrl, SignUpForm
 from django.contrib.auth import login as dj_login , authenticate, logout as dj_logout
 from datetime import datetime
@@ -9,6 +9,9 @@ import random, string
 
 
 def home(request):
+    if request.user.is_authenticated:
+        user_urls = ShortUrl.objects.filter(profile__user__id = request.user.id)
+        return render(request, 'home.html', {'msg':'Login successfuly!', 'user_urls':user_urls})
     return render(request, 'home.html')
 
 
@@ -26,8 +29,8 @@ def createshorturl(request):
                     random_chars += random.choice(random_chars_list)
             d = datetime.now()
             if request.user.is_authenticated:
-                profile = SignUpForm(instance = request.user)
-                s = ShortUrl(original_url=originalurl, short_url=random_chars, time_date_created=d, profile= profile)
+                
+                s = ShortUrl(original_url=originalurl, short_url=random_chars, time_date_created=d, profile= request.user.profile)
                 s.save()
                 return redirect(originalurl)
             return render(request, 'login.html')
@@ -71,7 +74,8 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user:
             dj_login(request, user)
-            return render(request, 'home.html', {'msg':'Login successfuly!', 'user': user})
+            user_urls = ShortUrl.objects.filter(profile__user__id = request.user.id)
+            return render(request, 'home.html', {'msg':'Login successfuly!', 'user': user, 'user_urls':user_urls})
         return render(request, 'login.html', {'msg':'username or password is wrong!!!'})
 
     return render(request, 'login.html')
