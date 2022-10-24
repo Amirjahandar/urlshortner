@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <title></title>
+</head>
+<body>
+
+    <header >
+        <nav id="navbar">
+            <div class="container">
+            <h1 class="logo"><a href="#">URL Shortner</a></h1>
+            <ul>
+                <li><a class="current" href="#">Home</a></li>
+                <li><a href="{% url 'create' %}">Create</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">contact</a></li>
+            </ul>
+            </div>
+        </nav>
+
+    </header>
+
+    {% block content %}
+    {% endblock content %}
+
+    <footer id="main-footer">
+        <p>Short Url , All Rights Reserved By am.jahandar</p>
+    </footer>
+
+
+</body>
+</html>
