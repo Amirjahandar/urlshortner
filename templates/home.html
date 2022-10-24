@@ -1,2 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
+
+
+{% block content %}
+<h3>{{user.username}}</h3>
+<h3>your last login: {{user.last_login}}</h3>
+<p class="bg-dark">
+{{msg}}
+</p>
+{% endblock content %}

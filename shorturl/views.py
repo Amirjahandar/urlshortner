@@ -1,7 +1,9 @@
-from django.shortcuts import render
+import profile
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import ShortUrl
-from .forms import CreateNewShortUrl
+from .forms import CreateNewShortUrl, SignUpForm
+from django.contrib.auth import login as dj_login , authenticate, logout as dj_logout
 from datetime import datetime
 import random, string
 
@@ -23,9 +25,13 @@ def createshorturl(request):
                 for i in range(6):
                     random_chars += random.choice(random_chars_list)
             d = datetime.now()
-            s = ShortUrl(original_url=originalurl, short_url=random_chars, time_date_created=d)
-            s.save()
-            return render(request, 'urlcreated.html', {'chars':random_chars})
+            if request.user.is_authenticated:
+                profile = SignUpForm(instance = request.user)
+                s = ShortUrl(original_url=originalurl, short_url=random_chars, time_date_created=d, profile= profile)
+                s.save()
+                return redirect(originalurl)
+            return render(request, 'login.html')
+        
 
     else:
         form = CreateNewShortUrl()
@@ -33,11 +39,7 @@ def createshorturl(request):
 
 
 
-
-
-
-
-def redirect_url(request, url:str):
+def redirect_url(request, url):
     try:
         current_obj = ShortUrl.objects.get(short_url=url)
         context = {'obj':current_obj}
@@ -46,3 +48,42 @@ def redirect_url(request, url:str):
         return render(request, 'pagenotfound.html')
 
 
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponse('User created successfully!')
+
+        return HttpResponse(f"{form.errors}") 
+
+    form = SignUpForm()
+    return render(request, 'signup.html', {'form':form})
+
+
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(request, username=username, password=password)
+        if user:
+            dj_login(request, user)
+            return render(request, 'home.html', {'msg':'Login successfuly!', 'user': user})
+        return render(request, 'login.html', {'msg':'username or password is wrong!!!'})
+
+    return render(request, 'login.html')
+
+
+
+def logout(request):
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return render(request, 'login.html')
+
+        dj_logout(request)
+        return render(request, 'home.html', {'msg':'See you later'})
+
+    return render(request, 'home.html')
