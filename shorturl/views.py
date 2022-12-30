@@ -29,8 +29,8 @@ def createshorturl(request):
                     random_chars += random.choice(random_chars_list)
             d = datetime.now()
             if request.user.is_authenticated:
-                
-                s = ShortUrl(original_url=originalurl, short_url=random_chars, time_date_created=d, profile= request.user.profile)
+                prf = Profile.objects.get(user = request.user.id)
+                s = ShortUrl(original_url=originalurl, short_url=random_chars, time_date_created=d, profile= prf)
                 s.save()
                 return redirect(originalurl)
             return render(request, 'login.html')

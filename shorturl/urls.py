@@ -10,5 +10,5 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('create/', createshorturl, name = 'create'),
     path('<str:url>/', redirect_url, name= 'redirect'),
-    path('admin/', admin.site.urls),
+
 ]

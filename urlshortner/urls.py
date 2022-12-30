@@ -20,6 +20,7 @@ import shorturl
 
 
 urlpatterns = [
-    path('', include('shorturl.urls') ),
     path('admin/', admin.site.urls),
+    path('', include('shorturl.urls') ),
+
 ]
