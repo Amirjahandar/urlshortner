@@ -42,7 +42,7 @@ def createshorturl(request):
 
 
 
-def redirect_url(request, url):
+def redirect_url(request, url:str):
     try:
         current_obj = ShortUrl.objects.get(short_url=url)
         context = {'obj':current_obj}
