@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+    # nginx:
+    #     build: ./nginx
+    #     ports: 
+    #         - 1339:80
+    #     volumes:
+    #         -
+    #     depends_on:
+    #         - web
+
+
+    db:
+        image: postgres
+        # volumes:
+        #     - postgres_data:/var/lib/postgresql/data/
+        environment:
+            # - POSTGRES_DB='urlshortnerdb'
+            # - POSTGRES_USER='postgres'
+            - POSTGRES_PASSWORD='postgres'
+
+        ports:
+            - "5432:5432"
+
+        # restart: "on-failure"
+
+    web:
+        build: .
+        # command: python3 manage.py runserver 0.0.0.0:8000
+        command: sh -c  "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+        volumes:
+            - .:/urlshortner
+        ports:
+            - "8000:8000"
+        # depends_on:
+        #     - db
+        # restart: "on-failure"
+
+
+
+
+volumes:
+  postgres_data:
+
+
